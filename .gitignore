@@ -17,4 +17,5 @@
 *.app
 objs
 t/servroot
-
+autotest
+autoconf.err
