@@ -27,21 +27,23 @@ Examples
         qrcode_gen;
       }
 
+      large_client_header_buffers  8  512k;
       #set with variables
-	  location /qr_with_var {
-		qrcode_fg_color $arg_fg_color;
-		qrcode_bg_color $arg_bg_color;
-		qrcode_level $arg_level;
-		qrcode_hint $arg_hint;
-		qrcode_size $arg_size;
-		qrcode_margin $arg_margin;
-		qrcode_version $arg_ver;
-		qrcode_casesensitive $arg_case;
-		qrcode_txt $arg_txt;
-		#qrcode_urlencode_txt $arg_txt;
+  	  location /qr_with_var {
+    		qrcode_fg_color $arg_fg_color;
+    		qrcode_bg_color $arg_bg_color;
+    		qrcode_level $arg_level;
+    		qrcode_hint $arg_hint;
+    		qrcode_size $arg_size;
+    		qrcode_margin $arg_margin;
+    		qrcode_version $arg_ver;
+    		qrcode_casesensitive $arg_case;
+    		qrcode_txt $arg_txt;
+        qrcode_cp $arg_cp;
+    		#qrcode_urlencode_txt $arg_txt;
 
-		qrcode_gen;
-	  }
+    		qrcode_gen;
+  	  }
     }
 
 curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
@@ -125,6 +127,12 @@ Directives
 **Default**: none
 **Context**: http, server, location
 **Description**: the txt you want to encode. Different from qrcode_txt, the directive will urldecode first. Just http%3a%2f%2fdcshi.com%3fa%3db%26c%3dd => http://dcshi.com?a=b&c=d
+<br/>
+
+**Syntax**: ***qrcode_cp*** txt
+**Default**: none
+**Context**: http, server, location
+**Description**: the center picture encoding by base64
 <br/>
 
 **Syntax**: ***qrcode_gen***
