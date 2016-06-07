@@ -1,1 +1,0 @@
-127.0.0.1 - - [07/Jun/2016:23:19:28 +0800] "GET /qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2 HTTP/1.1" 200 470 "-" "-"

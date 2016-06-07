@@ -395,10 +395,11 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
 	}
 
 	if (qlcf->cp.len) {
-			ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "generate image");
-
 	  	gdImagePtr im;
 	    im = gdImageCreateFromPngPtr(plain.len, plain.data);
+	    if (im == NULL) {
+	    	return NGX_HTTP_INTERNAL_SERVER_ERROR;
+	    }
 		int dstx = img_width / 2 - im->sx / 2;
 		int dsty = img_width / 2 - im->sy / 2;
 	    gdImageCopy(img, im, dstx, dsty, 0, 0, im->sx, im->sy);

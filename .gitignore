@@ -16,3 +16,5 @@
 *.out
 *.app
 objs
+t/servroot
+
