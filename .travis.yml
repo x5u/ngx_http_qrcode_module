@@ -9,7 +9,7 @@ before_install:
   - wget http://nginx.org/download/nginx-1.9.15.tar.gz
   - tar -zxf nginx-1.9.15.tar.gz
 script:
-  - (cd nginx-1.9.15 && ./configure --add-module=$(pwd) && make -j4 && sudo make install)
+  - (cd nginx-1.9.15 && ./configure --add-module=$(dirname $(pwd)) && make -j4 && sudo make install)
   - sudo cpanm Test::Nginx
   - (export PERL_MM_USE_DEFAULT=1 && git clone https://github.com/detailyang/test-nginx.git && cd test-nginx && perl Makefile.PL && sudo make uninstall && sudo make install)
   - make test
