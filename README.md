@@ -39,7 +39,7 @@ Examples
     		qrcode_version $arg_ver;
     		qrcode_casesensitive $arg_case;
     		qrcode_txt $arg_txt;
-        qrcode_cp $arg_cp;
+            qrcode_cp $arg_cp;
     		#qrcode_urlencode_txt $arg_txt;
 
     		qrcode_gen;
