@@ -1,0 +1,122 @@
+2016/06/07 23:19:28 [debug] 28026#0: bind() 0.0.0.0:1984 #6 
+2016/06/07 23:19:28 [notice] 28026#0: using the "epoll" event method
+2016/06/07 23:19:28 [notice] 28026#0: nginx/1.9.15
+2016/06/07 23:19:28 [notice] 28026#0: built by gcc 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC) 
+2016/06/07 23:19:28 [notice] 28026#0: OS: Linux 2.6.32-573.26.1.el6.x86_64
+2016/06/07 23:19:28 [notice] 28026#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+2016/06/07 23:19:28 [debug] 28027#0: write: 7, 00007FFD5569AD00, 6, 0
+2016/06/07 23:19:28 [debug] 28027#0: notify eventfd: 7
+2016/06/07 23:19:28 [debug] 28027#0: malloc: 0000000000752BA0:6144
+2016/06/07 23:19:28 [debug] 28027#0: malloc: 0000000000748160:13824
+2016/06/07 23:19:28 [debug] 28027#0: malloc: 00000000007543B0:6144
+2016/06/07 23:19:28 [debug] 28027#0: malloc: 00000000007680B0:6144
+2016/06/07 23:19:28 [debug] 28027#0: epoll add event: fd:6 op:1 ev:00002001
+2016/06/07 23:19:28 [debug] 28027#0: worker cycle
+2016/06/07 23:19:28 [debug] 28027#0: epoll timer: -1
+2016/06/07 23:19:28 [debug] 28027#0: epoll: fd:6 ev:0001 d:0000000000748160
+2016/06/07 23:19:28 [debug] 28027#0: accept on 0.0.0.0:1984, ready: 0
+2016/06/07 23:19:28 [debug] 28027#0: posix_memalign: 0000000000755BC0:512 @16
+2016/06/07 23:19:28 [debug] 28027#0: *1 accept: 127.0.0.1:46839 fd:8
+2016/06/07 23:19:28 [debug] 28027#0: *1 event timer add: 8: 60000:1465312828279
+2016/06/07 23:19:28 [debug] 28027#0: *1 reusable connection: 1
+2016/06/07 23:19:28 [debug] 28027#0: *1 epoll add event: fd:8 op:1 ev:80002001
+2016/06/07 23:19:28 [debug] 28027#0: timer delta: 34
+2016/06/07 23:19:28 [debug] 28027#0: worker cycle
+2016/06/07 23:19:28 [debug] 28027#0: epoll timer: 60000
+2016/06/07 23:19:28 [debug] 28027#0: epoll: fd:8 ev:0001 d:0000000000748238
+2016/06/07 23:19:28 [debug] 28027#0: *1 http wait request handler
+2016/06/07 23:19:28 [debug] 28027#0: *1 malloc: 0000000000743410:1024
+2016/06/07 23:19:28 [debug] 28027#0: *1 recv: fd:8 147 of 1024
+2016/06/07 23:19:28 [debug] 28027#0: *1 reusable connection: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 posix_memalign: 00000000007698C0:4096 @16
+2016/06/07 23:19:28 [debug] 28027#0: *1 http process request line
+2016/06/07 23:19:28 [debug] 28027#0: *1 http request line: "GET /qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2 HTTP/1.1"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http uri: "/qr_code"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http args: "txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http exten: ""
+2016/06/07 23:19:28 [debug] 28027#0: *1 http process request header line
+2016/06/07 23:19:28 [debug] 28027#0: *1 http header: "Host: localhost"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http header: "Connection: close"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http header done
+2016/06/07 23:19:28 [debug] 28027#0: *1 event timer del: 8: 1465312828279
+2016/06/07 23:19:28 [debug] 28027#0: *1 rewrite phase: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 test location: "/"
+2016/06/07 23:19:28 [debug] 28027#0: *1 test location: "qr_code"
+2016/06/07 23:19:28 [debug] 28027#0: *1 using configuration "=/qr_code"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http cl:-1 max:31457280
+2016/06/07 23:19:28 [debug] 28027#0: *1 rewrite phase: 2
+2016/06/07 23:19:28 [debug] 28027#0: *1 post rewrite phase: 3
+2016/06/07 23:19:28 [debug] 28027#0: *1 generic phase: 4
+2016/06/07 23:19:28 [debug] 28027#0: *1 generic phase: 5
+2016/06/07 23:19:28 [debug] 28027#0: *1 access phase: 6
+2016/06/07 23:19:28 [debug] 28027#0: *1 access phase: 7
+2016/06/07 23:19:28 [debug] 28027#0: *1 post access phase: 8
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "000000"
+2016/06/07 23:19:28 [debug] 28027#0: *1 posix_memalign: 000000000076A8D0:4096 @16
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "FFFFFF"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "3"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "400"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "0"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "1"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "123"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http script var: "123"
+2016/06/07 23:19:28 [debug] 28027#0: *1 fg_color 0000, bg_color ffffff0, level 3, hint 2, size 400, margin 0, version 2, casesensitive 1, txt 123
+2016/06/07 23:19:28 [debug] 28027#0: *1 HTTP/1.1 200 OK
+Server: nginx/1.9.15
+Date: Tue, 07 Jun 2016 15:19:28 GMT
+Content-Type: image/png
+Content-Length: 470
+Connection: close
+
+2016/06/07 23:19:28 [debug] 28027#0: *1 write new buf t:1 f:0 000000000076ABA0, pos 000000000076ABA0, size: 143 file: 0, size: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 http write filter: l:0 f:0 s:143
+2016/06/07 23:19:28 [debug] 28027#0: *1 http output filter "/qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http copy filter: "/qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http postpone filter "/qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2" 00007FFD5569AB90
+2016/06/07 23:19:28 [debug] 28027#0: *1 write old buf t:1 f:0 000000000076ABA0, pos 000000000076ABA0, size: 143 file: 0, size: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 write new buf t:0 f:0 0000000000000000, pos 0000000000796660, size: 470 file: 0, size: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 http write filter: l:1 f:0 s:613
+2016/06/07 23:19:28 [debug] 28027#0: *1 http write filter limit 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 writev: 613 of 613
+2016/06/07 23:19:28 [debug] 28027#0: *1 http write filter 0000000000000000
+2016/06/07 23:19:28 [debug] 28027#0: *1 http copy filter: 0 "/qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2"
+2016/06/07 23:19:28 [debug] 28027#0: *1 http finalize request: 0, "/qr_code?txt=123&size=400&fg_color=000000&bg_color=FFFFFF&case=1&margin=0&level=3&hint=2&ver=2" a:1, c:1
+2016/06/07 23:19:28 [debug] 28027#0: *1 event timer add: 8: 5000:1465312773280
+2016/06/07 23:19:28 [debug] 28027#0: *1 http lingering close handler
+2016/06/07 23:19:28 [debug] 28027#0: *1 recv: fd:8 0 of 4096
+2016/06/07 23:19:28 [debug] 28027#0: *1 lingering read: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 http request count:1 blk:0
+2016/06/07 23:19:28 [debug] 28027#0: *1 http close request
+2016/06/07 23:19:28 [debug] 28027#0: *1 http log handler
+2016/06/07 23:19:28 [debug] 28027#0: *1 free: 00000000007698C0, unused: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 free: 000000000076A8D0, unused: 2797
+2016/06/07 23:19:28 [debug] 28027#0: *1 close http connection: 8
+2016/06/07 23:19:28 [debug] 28027#0: *1 event timer del: 8: 1465312773280
+2016/06/07 23:19:28 [debug] 28027#0: *1 reusable connection: 0
+2016/06/07 23:19:28 [debug] 28027#0: *1 free: 0000000000743410
+2016/06/07 23:19:28 [debug] 28027#0: *1 free: 0000000000755BC0, unused: 144
+2016/06/07 23:19:28 [debug] 28027#0: timer delta: 1
+2016/06/07 23:19:28 [debug] 28027#0: worker cycle
+2016/06/07 23:19:28 [debug] 28027#0: epoll timer: -1
+2016/06/07 23:19:28 [notice] 28027#0: signal 3 (SIGQUIT) received, shutting down
+2016/06/07 23:19:28 [info] 28027#0: epoll_wait() failed (4: Interrupted system call)
+2016/06/07 23:19:28 [debug] 28027#0: timer delta: 94
+2016/06/07 23:19:28 [debug] 28027#0: flush files
+2016/06/07 23:19:28 [notice] 28027#0: exit
+2016/06/07 23:19:28 [debug] 28027#0: epoll del event: fd:6 op:2 ev:00000000
+2016/06/07 23:19:28 [debug] 28027#0: close listening 0.0.0.0:1984 #6 
+2016/06/07 23:19:28 [debug] 28027#0: run cleanup: 000000000075FBF8
+2016/06/07 23:19:28 [debug] 28027#0: cleanup resolver
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000766E20
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000759020
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000757F60
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000756EA0
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000755DE0
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000751190
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000744150, unused: 0
+2016/06/07 23:19:28 [debug] 28027#0: free: 000000000074D180, unused: 1
+2016/06/07 23:19:28 [debug] 28027#0: free: 000000000075A030, unused: 0
+2016/06/07 23:19:28 [debug] 28027#0: free: 000000000075E040, unused: 1
+2016/06/07 23:19:28 [debug] 28027#0: free: 0000000000762600, unused: 9208
