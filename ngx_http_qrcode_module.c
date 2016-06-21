@@ -368,7 +368,12 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
 	img_width	= code->width * code_size + 2 * img_margin;
 
 	gdImagePtr img;
-	img	= gdImageCreateTrueColor(img_width, img_width);
+    if (qlcf->cp.len) {
+        img = gdImageCreateTrueColor(img_width, img_width);
+    } else {
+        // hey, it's enougth for black and white picture
+        img = gdImageCreate(img_width, img_width);
+    }
 
 	fg_color = gdImageColorAllocate(img,
 			qlcf->fg_color[0], qlcf->fg_color[1], qlcf->fg_color[2]);
