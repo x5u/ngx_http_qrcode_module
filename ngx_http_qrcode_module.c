@@ -399,6 +399,8 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
 		}
 	}
 
+    QRcode_free(code);
+
 	if (qlcf->cp.len) {
 	  	gdImagePtr im;
 	    im = gdImageCreateFromPngPtr(plain.len, plain.data);
@@ -415,7 +417,6 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
     img_stream = gdImagePngPtr(img, &img_stream_len);
 
 	gdImageDestroy(img);
-	QRcode_free(code);
 
 	r->headers_out.status = NGX_HTTP_OK;
 	r->headers_out.content_length_n = img_stream_len;
