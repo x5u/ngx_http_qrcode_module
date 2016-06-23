@@ -1,6 +1,6 @@
 ngx_http_qrcode_module
 ======================
-![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/detailyang/ngx_http_qrcode_module.svg)](https://travis-ci.org/detailyang/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/detailyang/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/detailyang/ngx_http_qrcode_module.svg)](https://github.com/detailyang/ngx_http_qrcode_module/releases)
+![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/nginx-lover/ngx_http_qrcode_module.svg)](https://travis-ci.org/nginx-lover/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/nginx-lover/ngx_http_qrcode_module.svg)](https://github.com/nginx-lover/ngx_http_qrcode_module/releases)
 
 Description
 ===========
@@ -70,76 +70,76 @@ Refer to http://wiki.nginx.org/3rdPartyModules.
 
 Directives
 ==========
-**Syntax**: ***qrcode_fg_color*** color      
-**Default**: qrcode_fg_color 000000       
-**Context**: http, server, location       
-**Description**: set the color of QRcode.        
+**Syntax**: ***qrcode_fg_color*** color
+**Default**: qrcode_fg_color 000000
+**Context**: http, server, location
+**Description**: set the color of QRcode.
 <br/>
 
-**Syntax**: ***qrcode_bg_color*** color       
-**Default**: qrcode_bg_color FFFFFF        
-**Context**: http, server, location        
-**Description**: set the background color of QRcode.         
+**Syntax**: ***qrcode_bg_color*** color
+**Default**: qrcode_bg_color FFFFFF
+**Context**: http, server, location
+**Description**: set the background color of QRcode.
 <br/>
 
-**Syntax**: ***qrcode_level*** level          
-**Default**: qrcode_level 0        
-**Context**: http, server, location         
-**Description**: level of error correction, [0:3]. Refer to          http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e       
+**Syntax**: ***qrcode_level*** level
+**Default**: qrcode_level 0
+**Context**: http, server, location
+**Description**: level of error correction, [0:3]. Refer to          http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e
 <br/>
 
-**Syntax**: ***qrcode_hint*** hint       
-**Default**: qrcode_hint 2          
-**Context**: http, server, location          
-**Description**: encoding mode. Refer to            http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#ab7ec78b96e63c8f019bb328a8d4f55db          
+**Syntax**: ***qrcode_hint*** hint
+**Default**: qrcode_hint 2
+**Context**: http, server, location
+**Description**: encoding mode. Refer to            http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#ab7ec78b96e63c8f019bb328a8d4f55db
 <br/>
 
-**Syntax**: ***qrcode_size*** size          
+**Syntax**: ***qrcode_size*** size
 **Default**: qrcode_size 4
-**Context**: http, server, location        
-**Description**: size of qrcode image.(pixel)        
+**Context**: http, server, location
+**Description**: size of qrcode image.(pixel)
 <br/>
 
-**Syntax**: ***qrcode_margin*** margin        
-**Default**: qrcode_margin 4      
-**Context**: http, server, location        
-**Description**: margin of qrcode image.(pixel)        
+**Syntax**: ***qrcode_margin*** margin
+**Default**: qrcode_margin 4
+**Context**: http, server, location
+**Description**: margin of qrcode image.(pixel)
 <br/>
 
-**Syntax**: ***qrcode_version*** version           
-**Default**: qrcode_version 1        
-**Context**: http, server, location       
-**Description**: version of the symbol.it should less 10.        
+**Syntax**: ***qrcode_version*** version
+**Default**: qrcode_version 1
+**Context**: http, server, location
+**Description**: version of the symbol.it should less 10.
 <br/>
 
-**Syntax**: ***qrcode_casesensitive*** [1 | 0]       
-**Default**: qrcode_casesensitive off     
-**Context**: http, server, location       
-**Description**: case-sensitive(1) or not(0)       
+**Syntax**: ***qrcode_casesensitive*** [1 | 0]
+**Default**: qrcode_casesensitive off
+**Context**: http, server, location
+**Description**: case-sensitive(1) or not(0)
 <br/>
 
-**Syntax**: ***qrcode_txt*** txt         
-**Default**: none         
-**Context**: http, server, location       
-**Description**: the txt you want to encode.       
+**Syntax**: ***qrcode_txt*** txt
+**Default**: none
+**Context**: http, server, location
+**Description**: the txt you want to encode.
 <br/>
 
-**Syntax**: ***qrcode_urlencode_txt*** txt       
-**Default**: none       
-**Context**: http, server, location     
-**Description**: the txt you want to encode. Different from qrcode_txt, the directive will urldecode first. Just http%3a%2f%2fdcshi.com%3fa%3db%26c%3dd => http://dcshi.com?a=b&c=d        
+**Syntax**: ***qrcode_urlencode_txt*** txt
+**Default**: none
+**Context**: http, server, location
+**Description**: the txt you want to encode. Different from qrcode_txt, the directive will urldecode first. Just http%3a%2f%2fdcshi.com%3fa%3db%26c%3dd => http://dcshi.com?a=b&c=d
 <br/>
 
-**Syntax**: ***qrcode_cp*** txt           
-**Default**: none       
-**Context**: http, server, location      
-**Description**: the center picture encoding by base64     
+**Syntax**: ***qrcode_cp*** txt
+**Default**: none
+**Context**: http, server, location
+**Description**: the center picture encoding by base64
 <br/>
 
-**Syntax**: ***qrcode_gen***      
-**Default**: none     
-**Context**: http, server, location      
-**Description**: generate QRcode.        
+**Syntax**: ***qrcode_gen***
+**Default**: none
+**Context**: http, server, location
+**Description**: generate QRcode.
 <br/>
 
 Author
@@ -149,9 +149,9 @@ detailyang  <detailyang@gmail.com>
 
 Copyright and License
 =====================
-This module is licensed under the BSD license.         
-Copyright (C) 2013, by dcshi(施俊伟). <dcshi@qq.com>       
-Copyright (C) 2016, by detailyang. <detailyang@gmail.com>            
+This module is licensed under the BSD license.
+Copyright (C) 2013, by dcshi(施俊伟). <dcshi@qq.com>
+Copyright (C) 2016, by detailyang. <detailyang@gmail.com>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
