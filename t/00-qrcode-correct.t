@@ -65,7 +65,7 @@ __DATA__
 ]
 
 --- response_body_filters eval
-\&::qrdecode
+[\&::qrdecode]
 
 --- response_body_like eval
 [
