@@ -35,7 +35,8 @@ location = /qr_code {
 "GET /qr_code?txt=456&size=400&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=3&hint=2&ver=2",
 "GET /qr_code?txt=789&size=400&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=3&hint=2&ver=2",
 "GET /qr_code?txt=abcd&size=400&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=3&hint=2&ver=2",
+"GET /qr_code?txt=abcd&size=400&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=100&hint=2&ver=2",
 ]
 
 --- error_code eval
-[200, 200, 200, 200]
+[200, 200, 200, 200, 500]
