@@ -70,28 +70,28 @@ Refer to http://wiki.nginx.org/3rdPartyModules.
 
 Directives
 ==========
-**Syntax**: ***qrcode_fg_color*** color<br/>
-**Default**: qrcode_fg_color 000000<br/>         
-**Context**: http, server, location<br/>     
-**Description**: set the color of QRcode.<br/>     
+**Syntax**: ***qrcode_fg_color*** color       
+**Default**: qrcode_fg_color 000000    
+**Context**: http, server, location    
+**Description**: set the color of QRcode.    
+<br />
 
-
-**Syntax**: ***qrcode_bg_color*** color<br/>    
-**Default**: qrcode_bg_color FFFFFF<br/>      
-**Context**: http, server, location<br/>     
-**Description**: set the background color of QRcode.<br/>
+**Syntax**: ***qrcode_bg_color*** color    
+**Default**: qrcode_bg_color FFFFFF    
+**Context**: http, server, location    
+**Description**: set the background color of QRcode.    
 <br/>
 
-**Syntax**: ***qrcode_level*** level<br/>
-**Default**: qrcode_level 0<br/>
-**Context**: http, server, location<br/>
-**Description**: level of error correction, [0:3]. Refer to http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e<br/>
+**Syntax**: ***qrcode_level*** level    
+**Default**: qrcode_level 0    
+**Context**: http, server, location    
+**Description**: level of error correction, [0:3]. Refer to http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e    
 <br/>
 
-**Syntax**: ***qrcode_hint*** hint
-**Default**: qrcode_hint 2
-**Context**: http, server, location
-**Description**: encoding mode. Refer to            http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#ab7ec78b96e63c8f019bb328a8d4f55db<br/>
+**Syntax**: ***qrcode_hint*** hint    
+**Default**: qrcode_hint 2    
+**Context**: http, server, location    
+**Description**: encoding mode. Refer to            http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#ab7ec78b96e63c8f019bb328a8d4f55db
 <br/>
 
 **Syntax**: ***qrcode_size*** size<br/>
