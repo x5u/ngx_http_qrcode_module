@@ -70,76 +70,76 @@ Refer to http://wiki.nginx.org/3rdPartyModules.
 
 Directives
 ==========
-**Syntax**: ***qrcode_fg_color*** color
-**Default**: qrcode_fg_color 000000
-**Context**: http, server, location
-**Description**: set the color of QRcode.
+**Syntax**: ***qrcode_fg_color*** color       
+**Default**: qrcode_fg_color 000000    
+**Context**: http, server, location    
+**Description**: set the color of QRcode.    
+<br />
+
+**Syntax**: ***qrcode_bg_color*** color    
+**Default**: qrcode_bg_color FFFFFF    
+**Context**: http, server, location    
+**Description**: set the background color of QRcode.    
 <br/>
 
-**Syntax**: ***qrcode_bg_color*** color
-**Default**: qrcode_bg_color FFFFFF
-**Context**: http, server, location
-**Description**: set the background color of QRcode.
+**Syntax**: ***qrcode_level*** level    
+**Default**: qrcode_level 0    
+**Context**: http, server, location    
+**Description**: level of error correction, [0:3]. Refer to http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e    
 <br/>
 
-**Syntax**: ***qrcode_level*** level
-**Default**: qrcode_level 0
-**Context**: http, server, location
-**Description**: level of error correction, [0:3]. Refer to          http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#a35d70229ba985c61bbdab27b0f65740e
-<br/>
-
-**Syntax**: ***qrcode_hint*** hint
-**Default**: qrcode_hint 2
-**Context**: http, server, location
+**Syntax**: ***qrcode_hint*** hint    
+**Default**: qrcode_hint 2    
+**Context**: http, server, location    
 **Description**: encoding mode. Refer to            http://fukuchi.org/works/qrencode/manual/qrencode_8h.html#ab7ec78b96e63c8f019bb328a8d4f55db
 <br/>
 
-**Syntax**: ***qrcode_size*** size
-**Default**: qrcode_size 4
-**Context**: http, server, location
-**Description**: size of qrcode image.(pixel)
+**Syntax**: ***qrcode_size*** size<br/>
+**Default**: qrcode_size 4<br/>
+**Context**: http, server, location<br/>
+**Description**: size of qrcode image.(pixel)<br/>
 <br/>
 
-**Syntax**: ***qrcode_margin*** margin
-**Default**: qrcode_margin 4
-**Context**: http, server, location
-**Description**: margin of qrcode image.(pixel)
+**Syntax**: ***qrcode_margin*** margin<br/>
+**Default**: qrcode_margin 4<br/>
+**Context**: http, server, location<br/>
+**Description**: margin of qrcode image.(pixel)<br/>
 <br/>
 
-**Syntax**: ***qrcode_version*** version
-**Default**: qrcode_version 1
-**Context**: http, server, location
-**Description**: version of the symbol.it should less 10.
+**Syntax**: ***qrcode_version*** version<br/>
+**Default**: qrcode_version 1<br/>
+**Context**: http, server, location<br/>
+**Description**: version of the symbol.it should less 10.<br/>
 <br/>
 
-**Syntax**: ***qrcode_casesensitive*** [1 | 0]
-**Default**: qrcode_casesensitive off
-**Context**: http, server, location
-**Description**: case-sensitive(1) or not(0)
+**Syntax**: ***qrcode_casesensitive*** [1 | 0]<br/>
+**Default**: qrcode_casesensitive off<br/>
+**Context**: http, server, location<br/>
+**Description**: case-sensitive(1) or not(0)<br/>
 <br/>
 
-**Syntax**: ***qrcode_txt*** txt
-**Default**: none
-**Context**: http, server, location
-**Description**: the txt you want to encode.
+**Syntax**: ***qrcode_txt*** txt<br/>
+**Default**: none<br/>
+**Context**: http, server, location<br/>
+**Description**: the txt you want to encode.<br/>
 <br/>
 
-**Syntax**: ***qrcode_urlencode_txt*** txt
-**Default**: none
-**Context**: http, server, location
-**Description**: the txt you want to encode. Different from qrcode_txt, the directive will urldecode first. Just http%3a%2f%2fdcshi.com%3fa%3db%26c%3dd => http://dcshi.com?a=b&c=d
+**Syntax**: ***qrcode_urlencode_txt*** txt<br/>
+**Default**: none<br/>
+**Context**: http, server, location<br/>
+**Description**: the txt you want to encode. Different from qrcode_txt, the directive will urldecode first. Just http%3a%2f%2fdcshi.com%3fa%3db%26c%3dd => http://dcshi.com?a=b&c=d<br/>
 <br/>
 
-**Syntax**: ***qrcode_cp*** txt
-**Default**: none
-**Context**: http, server, location
-**Description**: the center picture encoding by base64
+**Syntax**: ***qrcode_cp*** txt<br/>
+**Default**: none<br/>
+**Context**: http, server, location<br/>
+**Description**: the center picture encoding by base64<br/>
 <br/>
 
-**Syntax**: ***qrcode_gen***
-**Default**: none
-**Context**: http, server, location
-**Description**: generate QRcode.
+**Syntax**: ***qrcode_gen***<br/>
+**Default**: none<br/>
+**Context**: http, server, location<br/>
+**Description**: generate QRcode.<br/>
 <br/>
 
 Author
