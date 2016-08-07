@@ -150,7 +150,7 @@ detailyang  <detailyang@gmail.com>
 Copyright and License
 =====================
 This module is licensed under the BSD license.
-Copyright (C) 2013, by dcshi(施俊伟). <dcshi@qq.com>
+Copyright (C) 2013, by dcshi(施俊伟). <dcshi@qq.com>                    
 Copyright (C) 2016, by detailyang. <detailyang@gmail.com>
 All rights reserved.
 
