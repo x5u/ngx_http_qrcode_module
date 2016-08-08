@@ -46,8 +46,8 @@ typedef struct {
 } ngx_http_qrcode_arg_template_t;
 
 typedef struct {
-	ngx_int_t	bg_color[3];			/* color of qrcode */
-	ngx_int_t	fg_color[3];			/* color of background, default white */
+	ngx_int_t	bg_color[4];			/* color of qrcode */
+	ngx_int_t	fg_color[4];			/* color of background, default white */
 	ngx_int_t	level;					/* level of error correction, [0:3] */
 	ngx_int_t	hint;					/* encoding mode */
 	ngx_int_t	size;					/* size of qrcode image */
@@ -56,6 +56,7 @@ typedef struct {
 	ngx_int_t	casesensitive;			/* case-sensitive(1) or not(0) */
 	ngx_str_t	txt;					/* just txt */
 	ngx_str_t	cp; 					/* center picture */
+    ngx_flag_t multi;                   /* enable multi qrcode*/
 	ngx_array_t *cmds;
 } ngx_http_qrcode_loc_conf_t;
 
