@@ -49,6 +49,9 @@ static char *
 ngx_http_qrcode_gen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 static ngx_int_t
+ngx_http_multiqrcode_handler(ngx_http_request_t* r);
+
+static ngx_int_t
 ngx_http_qrcode_handler(ngx_http_request_t* r);
 
 static void *
@@ -60,6 +63,9 @@ ngx_http_qrcode_merge_loc_conf(ngx_conf_t* cf, void* parent, void* child);
 static char *
 ngx_http_qrcode_cmder(ngx_http_qrcode_cfg_t cfg_code,
 		ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+
+static ngx_int_t
+ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, u_char **b, ngx_uint_t *len);
 
 static ngx_command_t  ngx_http_qrcode_commands[] = {
 	{
@@ -139,6 +145,13 @@ static ngx_command_t  ngx_http_qrcode_commands[] = {
 		NGX_HTTP_LOC_CONF_OFFSET,
 		offsetof(ngx_http_qrcode_loc_conf_t, cp),
 		NULL },
+    {
+        ngx_string("qrcode_multi"),
+        NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+        ngx_conf_set_flag_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_qrcode_loc_conf_t, multi),
+        NULL },
 	{
 		ngx_string("qrcode_gen"),
 		NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1|NGX_CONF_NOARGS,
@@ -202,8 +215,10 @@ ngx_http_qrcode_create_loc_conf(ngx_conf_t *cf)
 	qlcf->margin		= NGX_CONF_UNSET_UINT;
 	qlcf->version 		= NGX_CONF_UNSET_UINT;
 	qlcf->casesensitive = NGX_CONF_UNSET_UINT;
+    qlcf->multi         = 0;
 	cmds				= NGX_CONF_OK;
 	*/
+    qlcf->multi = NGX_CONF_UNSET_UINT;
 
 	return qlcf;
 }
@@ -229,6 +244,7 @@ ngx_http_qrcode_merge_loc_conf(ngx_conf_t* cf, void* parent, void* child) {
 	ngx_conf_merge_value(qlcf->casesensitive, pre->casesensitive, 0);
 	ngx_conf_merge_str_value(qlcf->txt, pre->txt, "");
 	ngx_conf_merge_str_value(qlcf->cp, pre->cp, "");
+    ngx_conf_merge_value(qlcf->multi, pre->multi, 0);
 
 	if (qlcf->cmds == NULL) {
 		qlcf->cmds = pre->cmds;
@@ -315,112 +331,62 @@ ngx_http_qrcode_gen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 }
 
 static ngx_int_t
+ngx_http_multiqrcode_handler(ngx_http_request_t* r)
+{
+    u_char         *p;
+    u_char         *args_end;
+
+    ngx_int_t       rc;
+    ngx_str_t      *txt;
+    ngx_array_t    *mtxt;
+
+    mtxt = ngx_array_create(r->pool, 20, sizeof(ngx_str_t));
+    if (mtxt == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "qrcode: malloc mtxt array error");
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    p = r->args.data;
+    args_end = r->args.data + r->args.len;
+
+    while (p < args_end) {
+        txt = ngx_array_push(mtxt);
+        if (txt == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "qrcode: push mtxt array error");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+        rc = ngx_qrcode_arg(p, args_end, (u_char *)"txt[]", 5, txt);
+        if (rc != NGX_OK) {
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+
+        p = txt->data + txt->len;
+    }
+
+
+    return NGX_OK;
+}
+
+static ngx_int_t
 ngx_http_qrcode_handler(ngx_http_request_t* r)
 {
-	ngx_http_qrcode_loc_conf_t *qlcf;
-	ngx_int_t 	code_size;
-	ngx_int_t 	img_margin, img_width;
-	ngx_int_t 	fg_color, bg_color;
-	ngx_int_t 	x, y, posx, posy;
-	int 		img_stream_len;
-	u_char		*encoded_txt;
-	ngx_int_t	rc;
- 	ngx_str_t  plain;
+    u_char                     *b;
+    ngx_int_t                   rc;
+    ngx_uint_t                  len;
+    ngx_http_qrcode_loc_conf_t *qlcf;
 
 
 	qlcf = ngx_http_get_module_loc_conf(r, ngx_http_qrcode_module);
-
-	/* compile args */
-	rc = ngx_http_qrcode_compile_args(r, qlcf);
-	if (rc != NGX_OK)  {
-		ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "Failed to compile args.");
-		return NGX_HTTP_INTERNAL_SERVER_ERROR;
-	}
-
-	if (qlcf->cp.len) {
-		plain.data = ngx_pnalloc(r->pool, ngx_base64_decoded_length(qlcf->cp.len));
-		if (plain.data == NULL) {
-			return NGX_HTTP_INTERNAL_SERVER_ERROR;
-		}
-
-		if (ngx_decode_base64(&plain, &qlcf->cp)  != NGX_OK) {
-			ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] base64 decode error");
-			return NGX_HTTP_INTERNAL_SERVER_ERROR;
-		}
-	}
-
-	encoded_txt = ngx_pcalloc(r->pool, qlcf->txt.len + 1);
-	ngx_sprintf(encoded_txt, "%V", &qlcf->txt);
-
-	QRcode *code;
-	code = QRcode_encodeString((char*)encoded_txt,
-			qlcf->version, qlcf->level, qlcf->hint, qlcf->casesensitive);
-
-	if(code == NULL) {
-		ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-				"Failed to encode content.exception raised by libqrencode: %s", strerror(errno));
-		return NGX_HTTP_INTERNAL_SERVER_ERROR;
-	}
-
-	code_size	= qlcf->size / code->width;
-	code_size   = (code_size == 0) ? 1 : code_size;
-	img_margin	= qlcf->margin;
-	img_width	= code->width * code_size + 2 * img_margin;
-
-	gdImagePtr img;
-    if (qlcf->cp.len) {
-        img = gdImageCreateTrueColor(img_width, img_width);
-    } else {
-        // hey, it's enougth for black and white picture
-        img = gdImageCreate(img_width, img_width);
+    if (qlcf->multi == 1) {
+        return ngx_http_multiqrcode_handler(r);
+    }
+    rc = ngx_http_qrcode_create_image_stream(r, &b, &len);
+    if (rc != NGX_OK) {
+        return rc;
     }
 
-	fg_color = gdImageColorAllocate(img,
-			qlcf->fg_color[0], qlcf->fg_color[1], qlcf->fg_color[2]);
-
-	bg_color = gdImageColorAllocate(img,
-		   	qlcf->bg_color[0], qlcf->bg_color[1], qlcf->bg_color[2]);
-
-	gdImageFill(img, 0, 0, bg_color);
-
-	u_char *p = code->data;
-	for (y = 0; y < code->width; y++)
-	{
-		for (x = 0; x < code->width; x++)
-		{
-			if (*p & 1) {
-				posx = x * code_size + img_margin;
-				posy = y * code_size + img_margin;
-
-				gdImageFilledRectangle(img, posx, posy,
-					posx + code_size, posy + code_size, fg_color);
-			}
-			p++;
-		}
-	}
-
-    QRcode_free(code);
-
-	if (qlcf->cp.len) {
-	  	gdImagePtr im;
-	    im = gdImageCreateFromPngPtr(plain.len, plain.data);
-	    if (im == NULL) {
-	    	return NGX_HTTP_INTERNAL_SERVER_ERROR;
-	    }
-		int dstx = img_width / 2 - im->sx / 2;
-		int dsty = img_width / 2 - im->sy / 2;
-	    gdImageCopy(img, im, dstx, dsty, 0, 0, im->sx, im->sy);
-		gdImageDestroy(im);
-	}
-
-	u_char *img_stream;
-    img_stream = gdImagePngPtr(img, &img_stream_len);
-
-	gdImageDestroy(img);
-
 	r->headers_out.status = NGX_HTTP_OK;
-	r->headers_out.content_length_n = img_stream_len;
-
+	r->headers_out.content_length_n = len;
 	ngx_str_set(&r->headers_out.content_type, "image/png");
 	ngx_http_send_header(r);
 
@@ -435,8 +401,8 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
 
 	//set up the buffer chain
 	ngx_chain_t out;
-	buffer->pos = img_stream;
-	buffer->last = img_stream + img_stream_len;
+	buffer->pos = b;
+	buffer->last = b + len;
 	buffer->memory = 1;
 	buffer->last_buf = 1;
 	out.buf = buffer;
@@ -519,4 +485,125 @@ ngx_http_qrcode_cmder(ngx_http_qrcode_cfg_t cfg_code,
 	} /* end for */
 
 	return NGX_CONF_OK;
+}
+
+static ngx_int_t
+ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, u_char **b, ngx_uint_t *len)
+{
+
+    int                         img_stream_len;
+    u_char                     *encoded_txt, *img_stream;
+    ngx_int_t                   code_size;
+    ngx_int_t                   img_margin, img_width;
+    ngx_int_t                   fg_color, bg_color;
+    ngx_int_t                   x, y, posx, posy;
+    ngx_int_t                   rc;
+    ngx_str_t                   plain;
+    ngx_http_qrcode_loc_conf_t *qlcf;
+
+
+    qlcf = ngx_http_get_module_loc_conf(r, ngx_http_qrcode_module);
+    rc = ngx_http_qrcode_compile_args(r, qlcf);
+    if (rc != NGX_OK)  {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "Failed to compile args.");
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    if (qlcf->cp.len) {
+        plain.data = ngx_pnalloc(r->pool, ngx_base64_decoded_length(qlcf->cp.len));
+        if (plain.data == NULL) {
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+
+        if (ngx_decode_base64(&plain, &qlcf->cp)  != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] base64 decode error");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    encoded_txt = ngx_pcalloc(r->pool, qlcf->txt.len + 1);
+    ngx_sprintf(encoded_txt, "%V", &qlcf->txt);
+
+    QRcode *code;
+    code = QRcode_encodeString((char*)encoded_txt,
+            qlcf->version, qlcf->level, qlcf->hint, qlcf->casesensitive);
+
+    if(code == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                "Failed to encode content.exception raised by libqrencode: %s", strerror(errno));
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    code_size   = qlcf->size / code->width;
+    code_size   = (code_size == 0) ? 1 : code_size;
+    img_margin  = qlcf->margin;
+    img_width   = code->width * code_size + 2 * img_margin;
+
+    gdImagePtr img;
+    if (qlcf->cp.len) {
+        img = gdImageCreateTrueColor(img_width, img_width);
+    } else {
+        // hey, it's enougth for black and white picture
+        img = gdImageCreate(img_width, img_width);
+    }
+
+    fg_color = gdImageColorAllocate(img,
+            qlcf->fg_color[0], qlcf->fg_color[1], qlcf->fg_color[2]);
+
+    bg_color = gdImageColorAllocate(img,
+            qlcf->bg_color[0], qlcf->bg_color[1], qlcf->bg_color[2]);
+
+    gdImageFill(img, 0, 0, bg_color);
+
+    u_char *p = code->data;
+    for (y = 0; y < code->width; y++)
+    {
+        for (x = 0; x < code->width; x++)
+        {
+            if (*p & 1) {
+                posx = x * code_size + img_margin;
+                posy = y * code_size + img_margin;
+
+                gdImageFilledRectangle(img, posx, posy,
+                    posx + code_size, posy + code_size, fg_color);
+            }
+            p++;
+        }
+    }
+
+    QRcode_free(code);
+
+    if (qlcf->cp.len) {
+        gdImagePtr im;
+        im = gdImageCreateFromPngPtr(plain.len, plain.data);
+        if (im == NULL) {
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+        int dstx = img_width / 2 - im->sx / 2;
+        int dsty = img_width / 2 - im->sy / 2;
+        gdImageCopy(img, im, dstx, dsty, 0, 0, im->sx, im->sy);
+        gdImageDestroy(im);
+    }
+
+    img_stream = gdImagePngPtr(img, &img_stream_len);
+
+    gdImageDestroy(img);
+    if (img_stream == NULL) {
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    *b = ngx_pnalloc(r->pool, img_stream_len);
+    if (*b == NULL) {
+       goto ERROR;
+    }
+
+    img_stream = ngx_copy(*b, img_stream, img_stream_len);
+    *len = img_stream_len;
+
+    return NGX_OK;
+
+ERROR:
+
+    gdFree(img_stream);
+    return NGX_HTTP_INTERNAL_SERVER_ERROR;
 }
