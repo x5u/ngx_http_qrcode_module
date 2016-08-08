@@ -331,43 +331,150 @@ ngx_http_qrcode_gen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 }
 
 static ngx_int_t
+ngx_http_qrcode_buffer_send(ngx_http_request_t *r, ngx_str_t *str, ngx_int_t is_last) {
+    ngx_chain_t      out;
+    ngx_buf_t       *buffer;
+
+    buffer = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
+    if (buffer == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                "Failed to allocate response buffer");
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    buffer->pos = str->data;
+    buffer->last = str->data + str->len;
+    buffer->memory = 1;
+    buffer->last_buf = is_last;
+    out.buf = buffer;
+    out.next = NULL;
+
+    return ngx_http_output_filter(r, &out);
+}
+
+static ngx_int_t
 ngx_http_multiqrcode_handler(ngx_http_request_t* r)
 {
-    u_char         *p;
-    u_char         *args_end;
-
+    u_char         *p, *last, *b;
+    ngx_uint_t      i, len;
+    ngx_buf_t      *buffer;
     ngx_int_t       rc;
-    ngx_str_t      *txt;
-    ngx_array_t    *mtxt;
+    ngx_str_t      *txt, *base64, *args, arg, binary;
+    ngx_str_t       begin, end, middle;
+    ngx_array_t    *mtxt, *mbase64;
+    ngx_chain_t    *out;
+
 
     mtxt = ngx_array_create(r->pool, 20, sizeof(ngx_str_t));
     if (mtxt == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "qrcode: malloc mtxt array error");
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] malloc mtxt array error");
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    mbase64 = ngx_array_create(r->pool, 20, sizeof(ngx_str_t));
+    if (mbase64 == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] malloc base64 array error");
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
     p = r->args.data;
-    args_end = r->args.data + r->args.len;
+    last = r->args.data + r->args.len;
 
-    while (p < args_end) {
+    while (p < last) {
+        rc = ngx_qrcode_arg(p, last, (u_char *)"txt[]", 5, &arg);
+        if (rc != NGX_OK) {
+            break;
+        }
+
         txt = ngx_array_push(mtxt);
         if (txt == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "qrcode: push mtxt array error");
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] push mtxt array error");
             return NGX_HTTP_INTERNAL_SERVER_ERROR;
         }
-        rc = ngx_qrcode_arg(p, args_end, (u_char *)"txt[]", 5, txt);
-        if (rc != NGX_OK) {
-            return NGX_HTTP_INTERNAL_SERVER_ERROR;
-        }
+        txt->data = arg.data;
+        txt->len = arg.len;
 
         p = txt->data + txt->len;
     }
 
-    // args = mtxt.elts;
-    // for (i = 0; i < mtxt.nelts; i++) {
-    //     args[i].
-    // }
+    args = mtxt->elts;
+    for (i = 0; i < mtxt->nelts; i++) {
+        txt = &args[i];
+        rc = ngx_http_qrcode_create_image_stream(r, txt, &b, &len);
+        if (rc != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] create image stream error");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
 
+        base64 = ngx_array_push(mbase64);
+        if (base64 == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] create base64 error");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+        base64->len = ngx_base64_encoded_length(len);
+        base64->data = ngx_palloc(r->pool, base64->len);
+        if (base64->data == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] malloc base64 str error");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+
+        binary.data = b;
+        binary.len = len;
+        ngx_encode_base64(base64, &binary);
+    }
+
+    ngx_str_set(&begin , "[\"");
+    ngx_str_set(&end, "\"]");
+    ngx_str_set(&middle, "\", \"");
+
+    r->headers_out.content_length_n = begin.len;
+    args = mbase64->elts;
+    for (i = 0; i < mbase64->nelts; i++) {
+        base64 = &args[i];
+        r->headers_out.content_length_n += base64->len;
+        if (i != (mbase64->nelts - 1)) {
+            r->headers_out.content_length_n += middle.len;
+        }
+    }
+    r->headers_out.content_length_n += end.len;
+    r->headers_out.status = NGX_HTTP_OK;
+    ngx_str_set(&r->headers_out.content_type, "application/json");
+    ngx_http_send_header(r);
+
+    ngx_http_qrcode_buffer_send(r, &begin, 0);
+    args = mbase64->elts;
+    for (i = 0; i < mbase64->nelts; i++) {
+        base64 = &args[i];
+
+        out = ngx_pcalloc(r->pool, sizeof(ngx_chain_t));
+        if (out == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                    "[qrcode] Failed to allocate out chain");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+
+        buffer = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
+        if (buffer == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                    "[qrcode] Failed to allocate response buffer");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+        buffer->pos = base64->data;
+        buffer->last = base64->data + base64->len;
+        buffer->memory = 1;
+        buffer->last_buf = 0;
+        out->buf = buffer;
+        out->next = NULL;
+        if (ngx_http_output_filter(r, out) != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                    "[qrcode] Failed to output buffer");
+            return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        }
+        if (i != (mbase64->nelts - 1)) {
+            ngx_http_qrcode_buffer_send(r, &middle, 0);
+        }
+    }
+    ngx_http_qrcode_buffer_send(r, &end, 1);
 
     return NGX_OK;
 }
@@ -376,6 +483,7 @@ static ngx_int_t
 ngx_http_qrcode_handler(ngx_http_request_t* r)
 {
     u_char                     *b;
+    ngx_buf_t                  *buffer;
     ngx_int_t                   rc;
     ngx_uint_t                  len;
     ngx_http_qrcode_loc_conf_t *qlcf;
@@ -395,7 +503,6 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
 	ngx_str_set(&r->headers_out.content_type, "image/png");
 	ngx_http_send_header(r);
 
-	ngx_buf_t* buffer;
 	buffer = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
 
 	if (buffer == NULL) {
