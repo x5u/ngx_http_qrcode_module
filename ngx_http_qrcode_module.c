@@ -693,6 +693,7 @@ ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, ngx_str_t *txt, u_cha
         gdImagePtr im;
         im = gdImageCreateFromPngPtr(plain.len, plain.data);
         if (im == NULL) {
+            gdImageDestroy(img);
             return NGX_HTTP_INTERNAL_SERVER_ERROR;
         }
         int dstx = img_width / 2 - im->sx / 2;
@@ -702,7 +703,6 @@ ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, ngx_str_t *txt, u_cha
     }
 
     img_stream = gdImagePngPtr(img, &img_stream_len);
-
     gdImageDestroy(img);
     if (img_stream == NULL) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -710,16 +710,13 @@ ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, ngx_str_t *txt, u_cha
 
     *b = ngx_pnalloc(r->pool, img_stream_len);
     if (*b == NULL) {
-       goto ERROR;
+        gdFree(img_stream);
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    img_stream = ngx_copy(*b, img_stream, img_stream_len);
+    (void )ngx_copy(*b, img_stream, img_stream_len);
     *len = img_stream_len;
 
-    return NGX_OK;
-
-ERROR:
-
     gdFree(img_stream);
-    return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    return NGX_OK;
 }
