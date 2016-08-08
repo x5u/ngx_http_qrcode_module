@@ -65,7 +65,7 @@ ngx_http_qrcode_cmder(ngx_http_qrcode_cfg_t cfg_code,
 		ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 static ngx_int_t
-ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, u_char **b, ngx_uint_t *len);
+ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, ngx_str_t *txt, u_char **b, ngx_uint_t *len);
 
 static ngx_command_t  ngx_http_qrcode_commands[] = {
 	{
@@ -363,6 +363,11 @@ ngx_http_multiqrcode_handler(ngx_http_request_t* r)
         p = txt->data + txt->len;
     }
 
+    // args = mtxt.elts;
+    // for (i = 0; i < mtxt.nelts; i++) {
+    //     args[i].
+    // }
+
 
     return NGX_OK;
 }
@@ -380,7 +385,7 @@ ngx_http_qrcode_handler(ngx_http_request_t* r)
     if (qlcf->multi == 1) {
         return ngx_http_multiqrcode_handler(r);
     }
-    rc = ngx_http_qrcode_create_image_stream(r, &b, &len);
+    rc = ngx_http_qrcode_create_image_stream(r, &qlcf->txt, &b, &len);
     if (rc != NGX_OK) {
         return rc;
     }
@@ -488,7 +493,7 @@ ngx_http_qrcode_cmder(ngx_http_qrcode_cfg_t cfg_code,
 }
 
 static ngx_int_t
-ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, u_char **b, ngx_uint_t *len)
+ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, ngx_str_t *txt, u_char **b, ngx_uint_t *len)
 {
 
     int                         img_stream_len;
@@ -521,8 +526,12 @@ ngx_http_qrcode_create_image_stream(ngx_http_request_t *r, u_char **b, ngx_uint_
         }
     }
 
-    encoded_txt = ngx_pcalloc(r->pool, qlcf->txt.len + 1);
-    ngx_sprintf(encoded_txt, "%V", &qlcf->txt);
+    encoded_txt = ngx_pcalloc(r->pool, txt->len + 1);
+    if (encoded_txt == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] ");
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+    ngx_sprintf(encoded_txt, "%V", txt);
 
     QRcode *code;
     code = QRcode_encodeString((char*)encoded_txt,
