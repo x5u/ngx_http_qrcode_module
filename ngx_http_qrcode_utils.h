@@ -1,6 +1,6 @@
 /*===============================================================
 *   Copyright (C) 2013 All rights reserved.
-*   
+*
 *   Filename：ngx_http_qrcode_utils.h
 *   Author ：dcshi
 *   Created：2013-02-02
@@ -11,7 +11,9 @@
 
 #include "ngx_http_qrcode_module.h"
 
-ngx_int_t ngx_http_qrcode_compile_args(ngx_http_request_t *r, 
+ngx_int_t ngx_http_qrcode_compile_args(ngx_http_request_t *r,
 		ngx_http_qrcode_loc_conf_t *qlcf);
+ngx_int_t
+ngx_qrcode_arg(u_char *begin, u_char *end, u_char *name, size_t len, ngx_str_t *value);
 
 #endif

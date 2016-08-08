@@ -370,3 +370,40 @@ ngx_http_qrcode_compile_args(ngx_http_request_t *r, ngx_http_qrcode_loc_conf_t *
 
 	return NGX_OK;
 }
+
+ngx_int_t
+ngx_qrcode_arg(u_char *begin, u_char *end, u_char *name, size_t len, ngx_str_t *value)
+{
+    u_char  *p, *last;
+
+    p = begin;
+    last = end;
+
+    for ( /* void */ ; p < last; p++) {
+
+        /* we need '=' after name, so drop one char from last */
+
+        p = ngx_strlcasestrn(p, last - 1, name, len - 1);
+
+        if (p == NULL) {
+            return NGX_DECLINED;
+        }
+
+        if ((p == begin || *(p - 1) == '&') && *(p + len) == '=') {
+
+            value->data = p + len + 1;
+
+            p = ngx_strlchr(p, last, '&');
+
+            if (p == NULL) {
+                p = last;
+            }
+
+            value->len = p - value->data;
+
+            return NGX_OK;
+        }
+    }
+
+    return NGX_DECLINED;
+}
