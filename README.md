@@ -2,6 +2,17 @@ ngx_http_qrcode_module
 ======================
 ![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/nginx-lover/ngx_http_qrcode_module.svg)](https://travis-ci.org/nginx-lover/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/nginx-lover/ngx_http_qrcode_module.svg)](https://github.com/nginx-lover/ngx_http_qrcode_module/releases)
 
+
+Table of Contents
+-----------------
+
+  * [Description](#description)
+  * [Benchmark](#benchmark)
+  * [Installation](#installation)
+  * [Directives](#directives)
+  * [License](#license)
+  * [Author](#author)
+  
 Description
 ===========
 
@@ -179,7 +190,7 @@ dcshi(施俊伟) <dcshi@qq.com>
 
 detailyang  <detailyang@gmail.com>
 
-Copyright and License
+License
 =====================
 This module is licensed under the BSD license.
 
