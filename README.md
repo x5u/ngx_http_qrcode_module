@@ -7,6 +7,7 @@ Table of Contents
 -----------------
 
   * [Description](#description)
+  * [Examples](#examples)
   * [Benchmark](#benchmark)
   * [Installation](#installation)
   * [Directives](#directives)
@@ -20,13 +21,13 @@ ngx_http_qrcode_module is a an addon for Nginx to generate and serve QR code.
 
 Examples
 ========
-
+````
     server {
       listen 80;
       server_name  localhost;
 
       #set with constant
-      location /qr_with_con {
+      location = /qr_with_con {
         qrcode_fg_color FF0000;
         qrcode_bg_color FFFFFF;
         qrcode_level 2;
@@ -41,7 +42,7 @@ Examples
 
       large_client_header_buffers  8  512k;
       #set with variables
-  	  location /qr_with_var {
+  	  location = /qr_with_var {
     		qrcode_fg_color $arg_fg_color;
     		qrcode_bg_color $arg_bg_color;
     		qrcode_level $arg_level;
@@ -56,9 +57,29 @@ Examples
 
     		qrcode_gen;
   	  }
+  	  
+  	 location = /qr/batch {
+        qrcode_fg_color $arg_fg_color;
+        qrcode_bg_color $arg_bg_color;
+        qrcode_level $arg_level;
+        qrcode_hint $arg_hint;
+        qrcode_size $arg_size;
+        qrcode_margin $arg_margin;
+        qrcode_version $arg_ver;
+        qrcode_casesensitive $arg_case;
+        qrcode_txt $arg_txt;
+        qrcode_urlencode_txt $arg_txt;
+        qrcode_cp $arg_cp;
+
+        qrcode_multi on;
+        qrcode_gen;
+    }
     }
 
-curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
+    curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
+    curl "http://localhost/qr/batch?txt[]=123123&txt[]=fgsdf&size=100&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=2&hint=2&ver=3"
+````
+
 
 Benchmark
 ============
