@@ -72,6 +72,13 @@ qps by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_m
 rt by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
 ![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-rt.png)
 
+<h1>multi qrcode interface with fixed 200x200</h1>
+
+rt by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-rt.png)
+
+qps by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-qps.png)
 
 Dependencies
 ============
