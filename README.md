@@ -115,7 +115,7 @@ qps by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode
 
 Bottleneck
 ============
-with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng:)
+with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng at first:)
 
 PS: PR Welcolme :rocket: :rocket:
 
@@ -210,6 +210,12 @@ Directives
 **Default**: none<br/>
 **Context**: http, server, location<br/>
 **Description**: generate QRcode.<br/>
+<br/>
+
+**Syntax**: ***qrcode_multi***<br/>
+**Default**: off<br/>
+**Context**: http, server, location<br/>
+**Description**: enable batch qrencode.<br/>
 <br/>
 
 Author
