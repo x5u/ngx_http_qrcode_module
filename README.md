@@ -58,12 +58,12 @@ Mem: 8GB
 ````
 
 
-<h1>single qrcode interface</h1>
+<h1>single qrcode interface with fixed 200x200</h1>
 
 qps by encode length [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
 ![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-qps.png)
 
-rt by encode length [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+rt by encode length with fixed 20 [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
 ![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-rt.png)
 
 qps by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
