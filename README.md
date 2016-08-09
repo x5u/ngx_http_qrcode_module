@@ -49,6 +49,30 @@ Examples
 
 curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
 
+Benchmark
+============
+````
+Hardware:
+CPU: 4
+Mem: 8GB
+````
+
+
+<h1>single qrcode interface</h1>
+
+qps by encode length [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-qps.png)
+
+rt by encode length [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-rt.png)
+
+qps by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-qps.png)
+
+rt by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-rt.png)
+
+
 Dependencies
 ============
 ngx_http_qrcode_module depends upon libqrencode and libgd. Please install these first.
