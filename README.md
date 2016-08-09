@@ -9,6 +9,7 @@ Table of Contents
   * [Description](#description)
   * [Examples](#examples)
   * [Benchmark](#benchmark)
+  * [Bottleneck](#bottleneck)
   * [Installation](#installation)
   * [Directives](#directives)
   * [License](#license)
@@ -111,6 +112,12 @@ rt by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_
 
 qps by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
 ![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-qps.png)
+
+Bottleneck
+============
+with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng:)
+
+PS: PR Welcolme :rocket: :rocket:
 
 Dependencies
 ============
