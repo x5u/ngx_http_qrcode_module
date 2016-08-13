@@ -72,7 +72,7 @@ Examples
         qrcode_urlencode_txt $arg_txt;
         qrcode_cp $arg_cp;
 
-        qrcode_multi on;
+        qrcode_multi on; # we will get the args named "txt[]" from query string as the bulk txt 
         qrcode_gen;
     }
     }
