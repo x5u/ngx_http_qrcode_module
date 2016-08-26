@@ -2,6 +2,19 @@ ngx_http_qrcode_module
 ======================
 ![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/nginx-lover/ngx_http_qrcode_module.svg)](https://travis-ci.org/nginx-lover/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/nginx-lover/ngx_http_qrcode_module.svg)](https://github.com/nginx-lover/ngx_http_qrcode_module/releases)
 
+
+Table of Contents
+-----------------
+
+  * [Description](#description)
+  * [Examples](#examples)
+  * [Benchmark](#benchmark)
+  * [Bottleneck](#bottleneck)
+  * [Installation](#installation)
+  * [Directives](#directives)
+  * [License](#license)
+  * [Author](#author)
+  
 Description
 ===========
 
@@ -9,13 +22,13 @@ ngx_http_qrcode_module is a an addon for Nginx to generate and serve QR code.
 
 Examples
 ========
-
+````
     server {
       listen 80;
       server_name  localhost;
 
       #set with constant
-      location /qr_with_con {
+      location = /qr_with_con {
         qrcode_fg_color FF0000;
         qrcode_bg_color FFFFFF;
         qrcode_level 2;
@@ -30,7 +43,7 @@ Examples
 
       large_client_header_buffers  8  512k;
       #set with variables
-  	  location /qr_with_var {
+  	  location = /qr_with_var {
     		qrcode_fg_color $arg_fg_color;
     		qrcode_bg_color $arg_bg_color;
     		qrcode_level $arg_level;
@@ -45,9 +58,29 @@ Examples
 
     		qrcode_gen;
   	  }
+  	  
+  	 location = /qr/batch {
+        qrcode_fg_color $arg_fg_color;
+        qrcode_bg_color $arg_bg_color;
+        qrcode_level $arg_level;
+        qrcode_hint $arg_hint;
+        qrcode_size $arg_size;
+        qrcode_margin $arg_margin;
+        qrcode_version $arg_ver;
+        qrcode_casesensitive $arg_case;
+        qrcode_txt $arg_txt;
+        qrcode_urlencode_txt $arg_txt;
+        qrcode_cp $arg_cp;
+
+        qrcode_multi on; # we will get the args named "txt[]" from query string as the bulk txt 
+        qrcode_gen;
+    }
     }
 
-curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
+    curl "http://localhost/qr?size=6&fg_color=00FF00&bg_color=fff700&case=1&txt=12a&margin=2&level=0&hint=2&ver=2"
+    curl "http://localhost/qr/batch?txt[]=123123&txt[]=fgsdf&size=100&fg_color=ffffff&bg_color=000000&case=1&margin=0&level=2&hint=2&ver=3"
+````
+
 
 Benchmark
 ============
@@ -72,6 +105,19 @@ qps by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_m
 rt by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
 ![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-rt.png)
 
+<h1>multi qrcode interface with fixed 200x200</h1>
+
+rt by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-rt.png)
+
+qps by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-qps.png)
+
+Bottleneck
+============
+with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng at first:)
+
+PS: PR Welcolme :rocket: :rocket:
 
 Dependencies
 ============
@@ -166,13 +212,19 @@ Directives
 **Description**: generate QRcode.<br/>
 <br/>
 
+**Syntax**: ***qrcode_multi***<br/>
+**Default**: off<br/>
+**Context**: http, server, location<br/>
+**Description**: enable batch qrencode.<br/>
+<br/>
+
 Author
 ======
 dcshi(施俊伟) <dcshi@qq.com>
 
 detailyang  <detailyang@gmail.com>
 
-Copyright and License
+License
 =====================
 This module is licensed under the BSD license.
 

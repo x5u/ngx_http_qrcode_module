@@ -1,8 +1,9 @@
 /*===============================================================
 *   Copyright (C) 2012 All rights reserved.
+*   Copyright (C) 2016 All rights reserved.
 *
 *   Filename：ngx_http_qrcode_module.c
-*   Author ：dcshi
+*   Author ：dcshi, detailyang
 *   Created：2012-12-09
 ================================================================*/
 
