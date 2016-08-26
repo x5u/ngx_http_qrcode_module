@@ -383,7 +383,7 @@ ngx_http_qrcode_buf_add(ngx_chain_t *out, ngx_http_request_t *r, ngx_buf_t *b) {
 static ngx_int_t
 ngx_http_multiqrcode_handler(ngx_http_request_t* r)
 {
-    u_char         *p, *last, *b;
+    u_char         *p, *last, *b, *src, *dst;
     ngx_uint_t      i, len;
     ngx_buf_t      *buffer;
     ngx_int_t       rc;
@@ -420,10 +420,14 @@ ngx_http_multiqrcode_handler(ngx_http_request_t* r)
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "[qrcode] push mtxt array error");
             return NGX_HTTP_INTERNAL_SERVER_ERROR;
         }
-        txt->data = arg.data;
-        txt->len = arg.len;
 
-        p = txt->data + txt->len;
+        dst = arg.data;
+        src = arg.data;
+        txt->data = dst;
+        ngx_unescape_uri(&dst, &src, arg.len, 0);
+        txt->len = dst - txt->data;
+
+        p = arg.data + arg.len;
     }
 
     args = mtxt->elts;
