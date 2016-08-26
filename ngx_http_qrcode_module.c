@@ -330,27 +330,54 @@ ngx_http_qrcode_gen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 	return NGX_CONF_OK;
 }
 
+
 static ngx_int_t
-ngx_http_qrcode_buffer_send(ngx_http_request_t *r, ngx_str_t *str, ngx_int_t is_last) {
-    ngx_chain_t      out;
+ngx_http_qrcode_str_add(ngx_chain_t *out, ngx_http_request_t *r, ngx_str_t *str, ngx_int_t is_last) {
+    ngx_chain_t     *next;
     ngx_buf_t       *buffer;
+
+    next = ngx_pcalloc(r->pool, sizeof(ngx_chain_t));
+    if (out == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+            "Failed to allocate chain buffer");
+        return NGX_ERROR;
+    }
 
     buffer = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
     if (buffer == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                 "Failed to allocate response buffer");
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        return NGX_ERROR;
     }
 
     buffer->pos = str->data;
     buffer->last = str->data + str->len;
     buffer->memory = 1;
     buffer->last_buf = is_last;
-    out.buf = buffer;
-    out.next = NULL;
+    out->buf = buffer;
+    out->next = is_last ? NULL : next;
 
-    return ngx_http_output_filter(r, &out);
+    return NGX_OK;
 }
+
+
+static ngx_int_t
+ngx_http_qrcode_buf_add(ngx_chain_t *out, ngx_http_request_t *r, ngx_buf_t *b) {
+    ngx_chain_t     *next;
+
+    next = ngx_pcalloc(r->pool, sizeof(ngx_chain_t));
+    if (out == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+            "Failed to allocate chain buffer");
+        return NGX_ERROR;
+    }
+
+    out->buf = b;
+    out->next = next;
+
+    return NGX_OK;
+}
+
 
 static ngx_int_t
 ngx_http_multiqrcode_handler(ngx_http_request_t* r)
@@ -362,7 +389,8 @@ ngx_http_multiqrcode_handler(ngx_http_request_t* r)
     ngx_str_t      *txt, *base64, *args, arg, binary;
     ngx_str_t       begin, end, middle;
     ngx_array_t    *mtxt, *mbase64;
-    ngx_chain_t    *out;
+    ngx_chain_t    *outp;
+    ngx_chain_t     out;
 
 
     mtxt = ngx_array_create(r->pool, 20, sizeof(ngx_str_t));
@@ -441,18 +469,15 @@ ngx_http_multiqrcode_handler(ngx_http_request_t* r)
     ngx_str_set(&r->headers_out.content_type, "application/json");
     ngx_http_send_header(r);
 
-    ngx_http_qrcode_buffer_send(r, &begin, 0);
+    outp = &out;
+    if (ngx_http_qrcode_str_add(outp, r, &begin, 0) != NGX_OK) {
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+    outp = outp->next;
+
     args = mbase64->elts;
     for (i = 0; i < mbase64->nelts; i++) {
         base64 = &args[i];
-
-        out = ngx_pcalloc(r->pool, sizeof(ngx_chain_t));
-        if (out == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                    "[qrcode] Failed to allocate out chain");
-            return NGX_HTTP_INTERNAL_SERVER_ERROR;
-        }
-
         buffer = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
         if (buffer == NULL) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -463,20 +488,23 @@ ngx_http_multiqrcode_handler(ngx_http_request_t* r)
         buffer->last = base64->data + base64->len;
         buffer->memory = 1;
         buffer->last_buf = 0;
-        out->buf = buffer;
-        out->next = NULL;
-        if (ngx_http_output_filter(r, out) != NGX_OK) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                    "[qrcode] Failed to output buffer");
+        if (ngx_http_qrcode_buf_add(outp, r, buffer) != NGX_OK) {
             return NGX_HTTP_INTERNAL_SERVER_ERROR;
         }
+        outp = outp->next;
+
         if (i != (mbase64->nelts - 1)) {
-            ngx_http_qrcode_buffer_send(r, &middle, 0);
+            if (ngx_http_qrcode_str_add(outp, r, &middle, 0) != NGX_OK) {
+                return NGX_HTTP_INTERNAL_SERVER_ERROR;
+            }
+            outp = outp->next;
         }
     }
-    ngx_http_qrcode_buffer_send(r, &end, 1);
+    if (ngx_http_qrcode_str_add(outp, r, &end, 1) != NGX_OK) {
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
 
-    return NGX_OK;
+    return ngx_http_output_filter(r, &out);
 }
 
 static ngx_int_t
