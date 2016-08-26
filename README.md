@@ -1,6 +1,6 @@
 ngx_http_qrcode_module
 ======================
-![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/nginx-lover/ngx_http_qrcode_module.svg)](https://travis-ci.org/nginx-lover/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/nginx-lover/ngx_http_qrcode_module.svg)](https://github.com/nginx-lover/ngx_http_qrcode_module/releases)
+![Branch master](https://img.shields.io/badge/branch-master-brightgreen.svg?style=flat-square)[![Build](https://api.travis-ci.org/x-v8/ngx_http_qrcode_module.svg)](https://travis-ci.org/x-v8/ngx_http_qrcode_module)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/LICENSE)[![release](https://img.shields.io/github/release/x-v8/ngx_http_qrcode_module.svg)](https://github.com/x-v8/ngx_http_qrcode_module/releases)
 
 
 Table of Contents
@@ -93,29 +93,29 @@ Mem: 8GB
 
 <h1>single qrcode interface with fixed 200x200</h1>
 
-qps by encode length [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-qps.png)
+qps by encode length [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/encode-length-qps.png)
 
-rt by encode length with fixed 20 [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/encode-length-rt.png)
+rt by encode length with fixed 20 [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/encode-length-rt.png)
 
-qps by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-qps.png)
+qps by png size [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/png-size-qps.png)
 
-rt by png size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/png-size-rt.png)
+rt by png size [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/signle.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/png-size-rt.png)
 
 <h1>multi qrcode interface with fixed 200x200</h1>
 
-rt by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-rt.png)
+rt by batch size [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/batch-size-rt.png)
 
-qps by batch size [by wrk script](https://github.com/nginx-lover/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
-![encode length](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/batch-size-qps.png)
+qps by batch size [by wrk script](https://github.com/x-v8/ngx_http_qrcode_module/blob/master/benchmark/wrk/multi.lua)
+![encode length](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/batch-size-qps.png)
 
 Bottleneck
 ============
-with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/nginx-lover/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng at first:)
+with the systemtap, the flame graph show like [this](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/multi.svg) or [that](https://raw.githubusercontent.com/x-v8/ngx_http_qrcode_module/master/benchmark/multi.svg), we can find that the bottleneck is libpng (almost) and qrencode. If we want to more performance, we should rewrite the libpng at first:)
 
 PS: PR Welcolme :rocket: :rocket:
 
